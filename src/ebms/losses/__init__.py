@@ -6,3 +6,12 @@ from .score_matching import (
     ScoreMatchingLoss,
     SlicedScoreMatchingLoss,
 )
+
+__all__ = [
+    "BaseLoss",
+    "MaximumLikelihoodMCMCLoss",
+    "NoiseContrastiveEstimationLoss",
+    "ScoreMatchingLoss",
+    "DenoisingScoreMatchingLoss",
+    "SlicedScoreMatchingLoss",
+]

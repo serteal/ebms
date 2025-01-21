@@ -27,3 +27,6 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/ebms"]
+
+[tool.ruff]
+ignore = ["F722"] # ignores forward annotation error in jaxtyping

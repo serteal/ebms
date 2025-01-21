@@ -16,5 +16,5 @@ class MLP(BaseEnergyModel):
             nn.Linear(hidden_dim, out_dim),
         )
 
-    def forward(self, x: Float[Tensor, "batch_size d_model"]) -> Float[Tensor, "batch_size"]:
+    def forward(self, x: Float[Tensor, "batch_size d_model"]) -> Float[Tensor, " batch_size"]:
         return self.net(x)
