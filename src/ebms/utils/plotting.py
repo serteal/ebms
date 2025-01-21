@@ -1,6 +1,7 @@
+from typing import Tuple
+
 import matplotlib.pyplot as plt
 import torch
-import torch.nn as nn
 from jaxtyping import Float
 from torch import Tensor
 
@@ -11,32 +12,36 @@ from ebms.samplers import BaseSampler
 def generate_viz_samples(
     model: BaseEnergyModel,
     sampler: BaseSampler,
+    device: torch.device,
+    sample_shape: Tuple[int, ...],
     num_samples: int = 1000,
-    n_steps: int = 100,
+    num_sampling_steps: int = 100,
     **kwargs,
 ) -> Float[Tensor, "batch_size d_model"]:
-    # TODO: Pass d_model
-    init_samples = torch.randn(num_samples, 2).cuda()
-    return sampler.sample(init_samples, model, n_steps, **kwargs)
+    init_samples = torch.randn(num_samples, *sample_shape).to(device)
+    return sampler.sample(init_samples, model, num_sampling_steps, **kwargs)
 
 
 def visualize_samples(
     model: BaseEnergyModel,
     sampler: BaseSampler,
     train_data: Float[Tensor, "batch_size d_model"],
-    n_generated_samples: int = 1000,
-    n_sampling_steps: int = 3000,
+    num_generated_samples: int = 1000,
+    num_sampling_steps: int = 100,
     title: str = "Real vs Generated Samples",
     **kwargs,
 ) -> plt.Figure:
     """Visualize real and generated samples with energy contours"""
 
+    device = next(model.parameters()).device
     real_samples = train_data.cpu()
     generated_samples = generate_viz_samples(
         model,
         sampler,
-        num_samples=n_generated_samples,
-        n_steps=n_sampling_steps,
+        device=device,
+        num_samples=num_generated_samples,
+        sample_shape=train_data.shape[1:],
+        num_sampling_steps=num_sampling_steps,
         **kwargs,
     ).cpu()
 
@@ -71,7 +76,7 @@ def visualize_samples(
     x = torch.linspace(-4, 4, 100)
     y = torch.linspace(-4, 4, 100)
     X, Y = torch.meshgrid(x, y, indexing="ij")
-    grid_points = torch.stack([X.flatten(), Y.flatten()], dim=1).cuda()
+    grid_points = torch.stack([X.flatten(), Y.flatten()], dim=1).to(device)
 
     with torch.no_grad():
         energies = model(grid_points).reshape(100, 100).cpu()

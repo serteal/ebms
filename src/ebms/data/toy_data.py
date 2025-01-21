@@ -1,12 +1,12 @@
-from typing import Tuple
-
 import numpy as np
 import torch
+from jaxtyping import Float
+from torch import Tensor
 
 
 class ToyDataGenerator:
     @staticmethod
-    def generate_8gaussians(num_samples: int) -> torch.Tensor:
+    def generate_8gaussians(num_samples: int) -> Float[Tensor, "num_samples 2"]:
         z = torch.randn(num_samples, 2)
         scale = 4
         sq2 = 1 / np.sqrt(2)
@@ -26,7 +26,7 @@ class ToyDataGenerator:
         ).float()
 
     @staticmethod
-    def generate_2spirals(num_samples: int) -> torch.Tensor:
+    def generate_2spirals(num_samples: int) -> Float[Tensor, "num_samples 2"]:
         z = torch.randn(num_samples, 2)
         n = torch.sqrt(torch.rand(num_samples // 2)) * 540 * (2 * np.pi) / 360
         d1x = -torch.cos(n) * n + torch.rand(num_samples // 2) * 0.5
@@ -38,16 +38,8 @@ class ToyDataGenerator:
         return (x + 0.1 * z).float()
 
     @staticmethod
-    def generate_4squares(num_samples: int) -> torch.Tensor:
+    def generate_4squares(num_samples: int) -> Float[Tensor, "num_samples 2"]:
         points_per_square = num_samples // 4
-        # centers = torch.tensor(
-        #     [
-        #         [-1.5, 1.5],
-        #         [1.5, 1.5],
-        #         [-1.5, -1.5],
-        #         [1.5, -1.5],
-        #     ]
-        # )
 
         centers = torch.tensor(
             [
@@ -78,7 +70,7 @@ class ToyDataGenerator:
         return torch.cat(points, dim=0)
 
     @staticmethod
-    def generate(dataset_name: str, num_samples: int) -> torch.Tensor:
+    def generate(dataset_name: str, num_samples: int) -> Float[Tensor, "num_samples 2"]:
         if dataset_name == "8gaussians":
             return ToyDataGenerator.generate_8gaussians(num_samples)
         elif dataset_name == "2spirals":
