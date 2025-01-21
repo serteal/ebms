@@ -40,12 +40,21 @@ class ToyDataGenerator:
     @staticmethod
     def generate_4squares(num_samples: int) -> torch.Tensor:
         points_per_square = num_samples // 4
+        # centers = torch.tensor(
+        #     [
+        #         [-1.5, 1.5],
+        #         [1.5, 1.5],
+        #         [-1.5, -1.5],
+        #         [1.5, -1.5],
+        #     ]
+        # )
+
         centers = torch.tensor(
             [
-                [-1.5, 1.5],
-                [1.5, 1.5],
-                [-1.5, -1.5],
-                [1.5, -1.5],
+                [-2, 2],
+                [2, 2],
+                [-2, -2],
+                [2, -2],
             ]
         )
 
